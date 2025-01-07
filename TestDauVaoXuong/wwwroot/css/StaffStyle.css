@@ -1,0 +1,21 @@
+﻿.container {
+    padding: 20px;
+}
+
+.border {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.bg-light {
+    background-color: #f9f9f9;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.form-control, .form-select {
+    font-size: 16px;
+    height: 48px;
+}

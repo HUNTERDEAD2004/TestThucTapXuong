@@ -1,83 +1,65 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TestDauVaoXuong.DTO;
+using TestDauVaoXuong.DTO.Staff.Update;
+using TestDauVaoXuong.IService;
+using TestDauVaoXuong.Models;
+using TestDauVaoXuong.Service;
 
 namespace TestDauVaoXuong.Controllers
 {
     public class StaffController : Controller
     {
-        // GET: StaffController
-        public ActionResult Index()
+        private readonly IStaffServices _staffService;
+
+        public StaffController(IStaffServices staffService)
+        {
+            _staffService = staffService;
+        }
+
+        public IActionResult Index()
+        {
+            var staffList =  _staffService.GetAllStaff();
+
+            return View(staffList);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
 
-        // GET: StaffController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: StaffController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: StaffController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(CreateStaffRequest request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var staffCreate = _staffService.CreateStaff(request);
+
+            return RedirectToAction("Index", staffCreate);
         }
 
-        // GET: StaffController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Update(Guid id)
         {
-            return View();
+            var staffById = _staffService.GetById(id);
+
+            return View(staffById);
         }
 
-        // POST: StaffController/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Update(UpdateStaffRequest request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var staffUpdate = _staffService.UpdateStaff(request);
+
+            return RedirectToAction("Index", staffUpdate);
         }
 
-        // GET: StaffController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: StaffController/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(Guid id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var staffDelete = _staffService.DeleteStaff(id);
+
+            return RedirectToAction("Index", staffDelete);
         }
     }
 }

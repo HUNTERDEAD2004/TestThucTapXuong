@@ -1,0 +1,84 @@
+﻿@model TestDauVaoXuong.Models.Staff
+
+
+@{
+    ViewData["Title"] = "Cập nhật thông tin nhân viên";
+}
+
+<h1>Cập nhật thông tin nhân viên</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form id="updateForm" asp-action="Update" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- Id (ẩn) -->
+            <input type="hidden" asp-for="Id" />
+
+            <!-- Tên nhân viên -->
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="form-label">Tên nhân viên</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <!-- Mã nhân viên -->
+            <div class="form-group mb-3">
+                <label asp-for="StaffCode" class="form-label">Mã nhân viên</label>
+                <input asp-for="StaffCode" class="form-control" />
+                <span asp-validation-for="StaffCode" class="text-danger"></span>
+            </div>
+
+            <!-- Email FPT -->
+            <div class="form-group mb-3">
+                <label asp-for="AccountFpt" class="form-label">Email FPT</label>
+                <input asp-for="AccountFpt" class="form-control" />
+                <span asp-validation-for="AccountFpt" class="text-danger"></span>
+            </div>
+
+            <!-- Email FE -->
+            <div class="form-group mb-3">
+                <label asp-for="AccountFe" class="form-label">Email FE</label>
+                <input asp-for="AccountFe" class="form-control" />
+                <span asp-validation-for="AccountFe" class="text-danger"></span>
+            </div>
+
+            <!-- Trạng thái -->
+            <div class="form-group mb-3">
+                <label asp-for="Status" class="form-label">Trạng thái</label>
+                <select asp-for="Status" class="form-select">
+                    <option value="1">Hoạt động</option>
+                    <option value="2">Không hoạt động</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+
+            <!-- Ngày tạo -->
+            <div class="form-group mb-3">
+                <label asp-for="CreatedDate" class="form-label">Ngày tạo</label>
+                <input asp-for="CreatedDate" class="form-control" readonly />
+            </div>
+
+            <!-- Ngày chỉnh sửa -->
+            <div class="form-group mb-3">
+                <label asp-for="LastModifiedDate" class="form-label">Ngày chỉnh sửa</label>
+                <input asp-for="LastModifiedDate" class="form-control" readonly />
+            </div>
+
+            <!-- Nút Submit -->
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="updateResult"></div> <!-- Hiển thị kết quả sau khi cập nhật -->
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

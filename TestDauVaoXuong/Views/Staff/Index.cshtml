@@ -1,0 +1,178 @@
+﻿@model IEnumerable<TestDauVaoXuong.Models.Staff>
+
+@* @{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountFe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountFpt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StaffCode)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifiedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountFe)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountFpt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StaffCode)
+            </td>
+            <td>
+                    @Html.ActionLink("Update", "Update", new { item.Id }) |
+                @Html.ActionLink("Details", "Details", new {item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table> *@
+
+@{
+    ViewData["Title"] = "Quản lý nhân viên";
+}
+
+<head>
+    <!-- Gắn Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Gắn file CSS tùy chỉnh -->
+    <link href="~/css/StaffStyle.css" rel="stylesheet">
+</head>
+
+<div class="container">
+    <h1>Quản Lý nhân viên</h1>
+
+    <!-- Bộ lọc -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="p-3 border bg-light">
+                <!-- Nội dung bộ lọc -->
+                <h5>Bộ lọc</h5>
+                <div class="row g-3 align-items-center">
+                    <!-- Ô tìm kiếm -->
+                    <div class="col-md-8 col-lg-6">
+                        <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm (Mã giảng viên / Tên giảng viên / Email)">
+                    </div>
+                    <!-- Ô chọn trạng thái -->
+                    <div class="col-md-4 col-lg-6">
+                        <select class="form-select">
+                            <option value="">-- Chọn trạng thái --</option>
+                            <option value="1">Hoạt động</option>
+                            <option value="2">Không hoạt động</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách nhân viên -->
+    <div class="row">
+        <div class="col-12">
+            <div class="p-3 border bg-light">
+                <!-- Nội dung danh sách -->
+                <h5>Danh sách nhân viên</h5>
+                <!-- Các nút chức năng -->
+                <div class="d-flex justify-content-end p-3 border bg-light">
+                    <!-- Nhóm nút -->
+                    <button class="btn btn-success mx-1">Import nhân viên</button>
+                    <button class="btn btn-secondary mx-1">Download Template</button>
+                    @Html.ActionLink("Add nhân viên", "Create", "Staff", null, new { @class = "btn btn-primary mx-1" })
+                    <button class="btn btn-info mx-1">Xem lỗi Import</button>
+                </div>
+                <table class="table table-striped mt-3">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Mã nhân viên</th>
+                            <th>Tên nhân viên</th>
+                            <th>Email FPT</th>
+                            <th>Email FE</th>
+                            <th>Ngày tạo</th>
+                            <th>Ngày cập nhật lần cuối</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.StaffCode</td>
+                                <td>@item.Name</td>
+                                <td>@item.AccountFpt</td>
+                                <td>@item.AccountFe</td>
+                                <td>@item.CreatedDate</td>
+                                <td>@item.LastModifiedDate</td>
+                                <td>
+                                    @if (item.Status == 1)
+                                    {
+                                        <span class="badge bg-success">Hoạt động</span>
+                                    }
+                                    else if (item.Status == 2)
+                                    {
+                                        <span class="badge bg-secondary">Không hoạt động</span>
+                                    }
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Update", new { id = item.Id }, new { @class = "btn btn-primary btn-sm", onclick = "Update()" })
+                                    @Html.ActionLink("Remove", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "Delete()" })
+                                </td>
+                            </tr>
+                        }                                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
