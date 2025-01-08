@@ -1,0 +1,28 @@
+﻿@model IEnumerable<TestDauVaoXuong.Models.Staff>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td>@item.Id</td>
+        <td>@item.StaffCode</td>
+        <td>@item.Name</td>
+        <td>@item.AccountFpt</td>
+        <td>@item.AccountFe</td>
+        <td>@item.CreatedDate</td>
+        <td>@item.LastModifiedDate</td>
+        <td>
+            @if (item.Status == 1)
+            {
+                <span class="badge bg-success">Hoạt động</span>
+            }
+            else if (item.Status == 2)
+            {
+                <span class="badge bg-secondary">Không hoạt động</span>
+            }
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Update", new { id = item.Id }, new { @class = "btn btn-primary btn-sm" })
+            @Html.ActionLink("Remove", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm" })
+        </td>
+    </tr>
+}

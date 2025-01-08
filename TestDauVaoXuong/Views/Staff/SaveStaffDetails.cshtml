@@ -1,0 +1,79 @@
+﻿@* @model List<BomonChuyennganhDto> *@
+
+@{
+    ViewData["Title"] = "Quản lý bộ môn/Chuyên nghành";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Thông tin nhân viên</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" asp-action="SaveStaffDetails">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="StaffCode">Mã</label>
+                    <input type="text" id="StaffCode" name="StaffCode" class="form-control" value="@Model.FirstOrDefault()?.StaffCode" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label for="StaffName">Tên</label>
+                    <input type="text" id="StaffName" name="StaffName" class="form-control" value="@Model.FirstOrDefault()?.StaffName" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label for="AccountFpt">Email FPT</label>
+                    <input type="email" id="AccountFpt" name="AccountFpt" class="form-control" value="@Model.FirstOrDefault()?.AccountFpt" readonly />
+                </div>
+                <div class="col-md-3">
+                    <label for="AccountFe">Email FE</label>
+                    <input type="email" id="AccountFe" name="AccountFe" class="form-control" value="@Model.FirstOrDefault()?.AccountFe" readonly />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">
+        <h4>Danh sách bộ môn, chuyên ngành theo cơ sở</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Cơ sở</th>
+                    <th>Bộ môn</th>
+                    <th>Chuyên ngành</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    int index = 1;
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.FacilityName</td>
+                            <td>@item.DepartmentName</td>
+                            <td>@item.MajorName</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" asp-action="DeleteMajor" asp-route-id="@item.Id">Xóa</button>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">Nhân viên này không có bộ môn/chuyên ngành</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

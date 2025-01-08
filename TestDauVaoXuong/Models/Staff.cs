@@ -25,29 +25,5 @@ namespace TestDauVaoXuong.Models
         public ICollection<DepartmentFacility> DepartmentFacilities { get; set; }
 
         public ICollection<StaffMajorFacility> StaffMajorFacilities { get; set; }
-
-        public bool ValidateStaff()
-        { 
-            // Check email suffixes
-            if (!AccountFe.EndsWith("@fe.edu.vn") || !AccountFpt.EndsWith("@fpt.edu.vn")) 
-            { 
-                return false; 
-            } 
-            // Check unique constraints
-            if (AccountFe.Equals(AccountFpt) || StaffCode.Equals(AccountFpt) || StaffCode.Equals(AccountFe)) 
-            { 
-                return false; 
-            } 
-            // Check for spaces and Vietnamese characters
-            Regex whiteSpaceRegex = new Regex(@"\s"); 
-            Regex vietnameseCharRegex = new Regex(@"[\p{IsCombiningDiacriticalMarks}\p{IsCombiningMarksForSymbols}\p{IsCombiningHalfMarks}]"); 
-
-            if (whiteSpaceRegex.IsMatch(AccountFe) || whiteSpaceRegex.IsMatch(AccountFpt) || vietnameseCharRegex.IsMatch(AccountFe) || vietnameseCharRegex.IsMatch(AccountFpt)) 
-            { 
-                return false; 
-            }
-
-            return true;
-        }
     }
 }

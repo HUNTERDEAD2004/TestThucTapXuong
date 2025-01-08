@@ -1,84 +1,40 @@
 ﻿@model IEnumerable<TestDauVaoXuong.Models.Staff>
 
-@* @{
-    ViewData["Title"] = "Index";
-}
-
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastModifiedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountFe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AccountFpt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StaffCode)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountFe)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccountFpt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StaffCode)
-            </td>
-            <td>
-                    @Html.ActionLink("Update", "Update", new { item.Id }) |
-                @Html.ActionLink("Details", "Details", new {item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { item.Id })
-            </td>
-        </tr>
-}
-    </tbody>
-</table> *@
-
 @{
     ViewData["Title"] = "Quản lý nhân viên";
 }
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importModalLabel">Import Nhân Viên</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="ImportToExcel" asp-controller="Staff" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="file">Chọn file Excel:</label>
+                        <input type="file" name="file" id="file" accept=".xlsx, .xls" class="form-control" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <head>
     <!-- Gắn Bootstrap CSS -->
@@ -99,11 +55,11 @@
                 <div class="row g-3 align-items-center">
                     <!-- Ô tìm kiếm -->
                     <div class="col-md-8 col-lg-6">
-                        <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm (Mã giảng viên / Tên giảng viên / Email)">
+                        <input type="text" class="form-control" id="searchKeyword" placeholder="Nhập từ khóa tìm kiếm (Mã giảng viên / Tên giảng viên / Email)" oninput="filterStaff()">
                     </div>
                     <!-- Ô chọn trạng thái -->
                     <div class="col-md-4 col-lg-6">
-                        <select class="form-select">
+                        <select class="form-select" id="statusFilter" onchange="filterStaff()">
                             <option value="">-- Chọn trạng thái --</option>
                             <option value="1">Hoạt động</option>
                             <option value="2">Không hoạt động</option>
@@ -123,10 +79,13 @@
                 <!-- Các nút chức năng -->
                 <div class="d-flex justify-content-end p-3 border bg-light">
                     <!-- Nhóm nút -->
-                    <button class="btn btn-success mx-1">Import nhân viên</button>
-                    <button class="btn btn-secondary mx-1">Download Template</button>
+                    @* @Html.ActionLink("Import nhân viên", "Create", "Staff", null, new { @class = "btn btn-success mx-1" }) *@
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Import Nhân Viên
+                    </button>
+                    @Html.ActionLink("Download Template", "ExportToExcel", "Staff", null, new { @class = "btn btn-secondary mx-1" })
                     @Html.ActionLink("Add nhân viên", "Create", "Staff", null, new { @class = "btn btn-primary mx-1" })
-                    <button class="btn btn-info mx-1">Xem lỗi Import</button>
+                    <button class="btn btn-info mx-1">Xem log Import</button>
                 </div>
                 <table class="table table-striped mt-3">
                     <thead>
@@ -142,7 +101,7 @@
                             <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="staffList">
                         @foreach (var item in Model)
                         {
                             <tr>
@@ -166,6 +125,7 @@
                                 <td>
                                     @Html.ActionLink("Edit", "Update", new { id = item.Id }, new { @class = "btn btn-primary btn-sm", onclick = "Update()" })
                                     @Html.ActionLink("Remove", "Delete", new { id = item.Id }, new { @class = "btn btn-danger btn-sm", onclick = "Delete()" })
+                                    @Html.ActionLink("GetMajor", "GetMDSF", new { id = item.Id }, new { @class = "btn btn-info btn-sm" })
                                 </td>
                             </tr>
                         }                                    
@@ -175,4 +135,25 @@
         </div>
     </div>
 </div>
+
+<!-- Thêm script vào cuối trang -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function filterStaff() {
+        const keyword = $('#searchKeyword').val();
+        const status = $('#statusFilter').val();
+
+        $.ajax({
+            url: '/Staff/Filter',
+            method: 'GET',
+            data: { searchKeyword: keyword, status: status },
+            success: function (data) {
+                $('#staffList').html(data); // Cập nhật lại danh sách nhân viên
+            },
+            error: function () {
+                alert('Có lỗi xảy ra khi lọc nhân viên.');
+            }
+        });
+    }
+</script>
 

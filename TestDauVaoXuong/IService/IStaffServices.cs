@@ -1,5 +1,6 @@
 ﻿using TestDauVaoXuong.DTO;
 using TestDauVaoXuong.DTO.Staff.Update;
+using TestDauVaoXuong.DTO.StaffMajorFacility;
 using TestDauVaoXuong.Models;
 
 namespace TestDauVaoXuong.IService
@@ -15,5 +16,11 @@ namespace TestDauVaoXuong.IService
         bool UpdateStaff(UpdateStaffRequest request);
 
         bool DeleteStaff(Guid id);
+
+        List<BomonChuyennganhDto> GetMDSF(Guid id);
+
+        byte[] ExportToExcel();
+
+        string ImportToExcel(IFormFile file);
     }
 }
